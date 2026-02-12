@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Regional Operations Intelligence Copilot - Demo Report</title>
+  <style>
+    body { font-family: Inter, Arial, sans-serif; margin: 24px; background: #f5f7fb; color: #121826; }
+    .card { background: #fff; border-radius: 10px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 6px rgba(18,24,38,.08); }
+    h1 { margin: 0 0 8px; }
+    h2 { margin-top: 0; }
+    .meta { color: #4b5563; margin: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: left; vertical-align: top; }
+    th { background: #f8fafc; }
+    .pill { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #e0ecff; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <section class="card">
+    <h1>Regional Operations Intelligence Copilot</h1>
+    <p class="meta">Standalone HTML demo report generated from: <code>data/sample_station_metrics.csv</code></p>
+    <p><span class="pill">MVP</span> Risk prioritization + systemic signal detection + WBR narrative</p>
+  </section>
+
+  <section class="card">
+    <h2>WBR Summary</h2>
+    <p>Regional risk posture is stable with average score 0.41. 0 station(s) are currently in critical status. DS001 scored 0.68 (high) driven by sla_miss_pct, dwell_variance_hours. DS006 scored 0.60 (high) driven by sla_miss_pct, dwell_variance_hours. DS004 scored 0.54 (moderate) driven by sla_miss_pct, dwell_variance_hours. A systemic pattern was identified in US-WEST-R1 on 2026-01-18: dwell_variance_hours affecting 5 stations.</p>
+  </section>
+
+  <section class="card">
+    <h2>Top 8 Station Risks</h2>
+    <table>
+      <thead>
+        <tr><th>Station</th><th>Score</th><th>Severity</th><th>Likely Root Causes</th><th>Suggested Interventions</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>DS001</td><td>0.68</td><td>high</td><td>Capacity-demand mismatch during peak window; Late inbound linehaul causing downstream queueing; Planned vs actual labor shortfall</td><td>Trigger same-day exception review with top 3 impacted routes.; Execute inbound smoothing for the next 2 cycles.; Activate labor contingency roster for next shift.</td></tr><tr><td>DS006</td><td>0.60</td><td>high</td><td>Capacity-demand mismatch during peak window; Late inbound linehaul causing downstream queueing; Planned vs actual labor shortfall</td><td>Trigger same-day exception review with top 3 impacted routes.; Execute inbound smoothing for the next 2 cycles.; Activate labor contingency roster for next shift.</td></tr><tr><td>DS004</td><td>0.54</td><td>moderate</td><td>Capacity-demand mismatch during peak window; Late inbound linehaul causing downstream queueing; Planned vs actual labor shortfall</td><td>Trigger same-day exception review with top 3 impacted routes.; Execute inbound smoothing for the next 2 cycles.; Activate labor contingency roster for next shift.</td></tr><tr><td>DS002</td><td>0.43</td><td>moderate</td><td>Capacity-demand mismatch during peak window; Late inbound linehaul causing downstream queueing; Planned vs actual labor shortfall</td><td>Trigger same-day exception review with top 3 impacted routes.; Execute inbound smoothing for the next 2 cycles.; Activate labor contingency roster for next shift.</td></tr><tr><td>DS005</td><td>0.41</td><td>moderate</td><td>Capacity-demand mismatch during peak window; Late inbound linehaul causing downstream queueing; Forecast miss from upstream dispatch profile</td><td>Trigger same-day exception review with top 3 impacted routes.; Execute inbound smoothing for the next 2 cycles.; Coordinate upstream dispatch throttling for overloaded windows.</td></tr><tr><td>DS008</td><td>0.28</td><td>low</td><td>Capacity-demand mismatch during peak window; Late inbound linehaul causing downstream queueing; Planned vs actual labor shortfall</td><td>Trigger same-day exception review with top 3 impacted routes.; Execute inbound smoothing for the next 2 cycles.; Activate labor contingency roster for next shift.</td></tr><tr><td>DS007</td><td>0.20</td><td>low</td><td>Capacity-demand mismatch during peak window; Late inbound linehaul causing downstream queueing; Planned vs actual labor shortfall</td><td>Trigger same-day exception review with top 3 impacted routes.; Execute inbound smoothing for the next 2 cycles.; Activate labor contingency roster for next shift.</td></tr><tr><td>DS003</td><td>0.14</td><td>low</td><td>Capacity-demand mismatch during peak window; Late inbound linehaul causing downstream queueing; Planned vs actual labor shortfall</td><td>Trigger same-day exception review with top 3 impacted routes.; Execute inbound smoothing for the next 2 cycles.; Activate labor contingency roster for next shift.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Systemic Signals</h2>
+    <ul><li>Systemic signal detected: dwell_variance_hours breached in 5/8 stations (62%) with confidence 0.81.</li></ul>
+  </section>
+</body>
+</html>
