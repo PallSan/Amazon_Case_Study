@@ -8,6 +8,16 @@ from .engine import detect_systemic_events, generate_wbr_summary, rank_station_r
 from .io import load_station_metrics
 
 
+def _severity_class(severity: str) -> str:
+    if severity == "critical":
+        return "severity-red"
+    if severity == "high":
+        return "severity-red"
+    if severity == "moderate":
+        return "severity-yellow"
+    return "severity-green"
+
+
 def build_html_report(input_csv: str, top: int = 10) -> str:
     metrics = load_station_metrics(input_csv)
     ranked = rank_station_risks(metrics)
@@ -15,18 +25,33 @@ def build_html_report(input_csv: str, top: int = 10) -> str:
     summary = generate_wbr_summary(ranked, systemic)
 
     top = max(1, min(top, 50))
+    top_risks = ranked[:top]
 
     risk_rows = "".join(
         (
             "<tr>"
-            f"<td>{html.escape(r.station_id)}</td>"
+            f"<td><a href='#station-{html.escape(r.station_id)}'>{html.escape(r.station_id)}</a></td>"
             f"<td>{r.score:.2f}</td>"
-            f"<td>{html.escape(r.severity)}</td>"
+            f"<td><span class='severity-pill {_severity_class(r.severity)}'>{html.escape(r.severity.title())}</span></td>"
             f"<td>{html.escape('; '.join(r.root_causes[:3]))}</td>"
             f"<td>{html.escape('; '.join(r.interventions[:3]))}</td>"
             "</tr>"
         )
-        for r in ranked[:top]
+        for r in top_risks
+    )
+
+    station_cards = "".join(
+        (
+            f"<section id='station-{html.escape(r.station_id)}' class='card'>"
+            f"<h3>{html.escape(r.station_id)} <span class='severity-pill {_severity_class(r.severity)}'>{html.escape(r.severity.title())}</span></h3>"
+            f"<p><strong>Risk score:</strong> {r.score:.2f}</p>"
+            f"<p><strong>Explanation:</strong> {html.escape(r.explanation)}</p>"
+            f"<p><strong>Likely root causes:</strong> {html.escape('; '.join(r.root_causes[:3]))}</p>"
+            f"<p><strong>Suggested interventions:</strong> {html.escape('; '.join(r.interventions[:3]))}</p>"
+            "<p><a href='#top'>Back to top</a></p>"
+            "</section>"
+        )
+        for r in top_risks
     )
 
     systemic_rows = (
@@ -51,21 +76,35 @@ def build_html_report(input_csv: str, top: int = 10) -> str:
     th, td {{ padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: left; vertical-align: top; }}
     th {{ background: #f8fafc; }}
     .pill {{ display: inline-block; padding: 4px 8px; border-radius: 999px; background: #e0ecff; font-size: 12px; }}
+    .severity-pill {{ display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }}
+    .severity-red {{ background: #fee2e2; color: #991b1b; }}
+    .severity-yellow {{ background: #fef3c7; color: #92400e; }}
+    .severity-green {{ background: #dcfce7; color: #166534; }}
+    .nav {{ position: sticky; top: 0; z-index: 10; display: flex; gap: 14px; padding: 10px 12px; background: #ffffffd9; border: 1px solid #e5e7eb; border-radius: 10px; backdrop-filter: blur(4px); margin-bottom: 16px; }}
+    .nav a {{ text-decoration: none; color: #1d4ed8; font-weight: 600; }}
+    .nav a:hover {{ text-decoration: underline; }}
   </style>
 </head>
-<body>
+<body id=\"top\">
+  <nav class=\"nav\">
+    <a href=\"#summary\">WBR Summary</a>
+    <a href=\"#top-risks\">Top Risks</a>
+    <a href=\"#systemic\">Systemic Signals</a>
+    <a href=\"#station-details\">Station Details</a>
+  </nav>
+
   <section class=\"card\">
     <h1>Regional Operations Intelligence Copilot</h1>
     <p class=\"meta\">Standalone HTML demo report generated from: <code>{html.escape(input_csv)}</code></p>
     <p><span class=\"pill\">MVP</span> Risk prioritization + systemic signal detection + WBR narrative</p>
   </section>
 
-  <section class=\"card\">
+  <section id=\"summary\" class=\"card\">
     <h2>WBR Summary</h2>
     <p>{html.escape(summary)}</p>
   </section>
 
-  <section class=\"card\">
+  <section id=\"top-risks\" class=\"card\">
     <h2>Top {top} Station Risks</h2>
     <table>
       <thead>
@@ -77,9 +116,14 @@ def build_html_report(input_csv: str, top: int = 10) -> str:
     </table>
   </section>
 
-  <section class=\"card\">
+  <section id=\"systemic\" class=\"card\">
     <h2>Systemic Signals</h2>
     <ul>{systemic_rows}</ul>
+  </section>
+
+  <section id=\"station-details\">
+    <h2>Station Drill-Down</h2>
+    {station_cards}
   </section>
 </body>
 </html>

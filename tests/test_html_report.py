@@ -10,6 +10,14 @@ class HtmlReportTests(unittest.TestCase):
         self.assertIn("Top 5 Station Risks", report)
         self.assertIn("Systemic Signals", report)
 
+    def test_report_has_navigation_and_severity_colors(self):
+        report = build_html_report("data/sample_station_metrics.csv", top=5)
+        self.assertIn("href=\"#summary\"", report)
+        self.assertIn("href=\"#top-risks\"", report)
+        self.assertIn("severity-red", report)
+        self.assertIn("severity-yellow", report)
+        self.assertIn("severity-green", report)
+
 
 if __name__ == "__main__":
     unittest.main()
